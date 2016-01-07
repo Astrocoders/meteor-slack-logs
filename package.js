@@ -1,6 +1,6 @@
 Package.describe({
   name: 'astrocoders:slack-logs',
-  version: '0.0.1',
+  version: '1.0.0',
   summary: 'Logs in your slack channel!',
   git: 'https://github.com/Astrocoders/meteor-slack-logs',
   documentation: 'README.md'
