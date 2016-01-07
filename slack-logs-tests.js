@@ -5,6 +5,7 @@
 Meteor.settings = {
   public: {
     slack: {
+      isProd: true,
       webhook: 'https://slackwebkook.com',
       botUsername: 'testbot',
       iconUrl: 'icon_url',
@@ -40,7 +41,7 @@ Tinytest.add(`slackLog - HTTP.post - should received url string as first arg`,
     test.isTrue(urlPattern.test(postArgs[0]));
 });
 
-Tinytest.add(`slackLog - HTTP.post - should received object with payload`,
+Tinytest.add(`slackLog - HTTP.post - should received object with headers & content`,
   (test) => {
     let postArgs;
     HTTP.post = function(...args) {
@@ -50,7 +51,8 @@ Tinytest.add(`slackLog - HTTP.post - should received object with payload`,
     slackLog.message('testing HTTP.post');
 
     test.isTrue(_.isObject(postArgs[1]));
-    test.equal(Object.keys(postArgs[1])[0], 'payload');
+    test.equal(Object.keys(postArgs[1])[0], 'headers');
+    test.equal(Object.keys(postArgs[1])[1], 'content');
 });
 
 Tinytest.add(`slackLog - HTTP.post - Payload - should have attachments array`,
@@ -62,10 +64,7 @@ Tinytest.add(`slackLog - HTTP.post - Payload - should have attachments array`,
 
     slackLog.message('testing HTTP.post');
 
-    let payloadObj = JSON.parse(postArgs[1].payload);
+    let content = JSON.parse(postArgs[1].content);
 
-    test.isTrue(_.isArray(payloadObj.attachments));
+    test.isTrue(_.isArray(content.attachments));
 });
-
-
-
