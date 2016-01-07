@@ -106,7 +106,7 @@ let sendSlack = function(message, type, scope) {
    * Payload stringfied
    * @type {String}
    */
-  let payload = JSON.stringify({
+  let payload = EJSON.stringify({
     icon_url,
     username,
     channel,
@@ -140,7 +140,7 @@ let sendSlack = function(message, type, scope) {
         response.statusCode !== 200 ||
         (response.statusCode === 200 && response.content !== 'ok')
     ) {
-      console.log(`${JSON.stringify(response)}, request: ${payload}`);
+      console.log(`${EJSON.stringify(response)}, request: ${payload}`);
       return;
     }
   });
@@ -157,6 +157,3 @@ slackLog = {
     sendSlack(text, 'success', scope);
   }
 };
-
-
-
