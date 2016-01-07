@@ -1,4 +1,4 @@
-let sendSlack = function(message, type) {
+let sendSlack = function(message, type, scope) {
   /**
    * Slack configuration on Meteor.settings
    */
@@ -13,12 +13,14 @@ let sendSlack = function(message, type) {
    */
 
   check(slackConfig, {
+    isProd: Boolean,
     webhook: String,
     botUsername: String,
     iconUrl: String,
     channel: String,
     appName: String,
     appUrl: String,
+    trackGlobalErrors: Match.Optional(Boolean),
   });
 
   /**
@@ -89,52 +91,70 @@ let sendSlack = function(message, type) {
   };
 
   /**
-   * Scope of the message
+   * If non scope sent find out
    * @type {String}
    */
-  let scope = Meteor.isClient ? 'client' : 'server';
-  let response;
+  if (!scope) {Meteor.isClient ? 'client' : 'server';}
+
+  /**
+   * Create attachments for slack message
+   * @type {Array}
+   */
   let attachments = createAttachment(message, type, scope);
 
+  /**
+   * Payload stringfied
+   * @type {String}
+   */
   let payload = JSON.stringify({
     icon_url,
     username,
     channel,
     attachments,
   });
+
   /**
    * HTTP.post payload on slack webhook
    * @param  {String} webhookLink
    * @param  {Object} options.payload: payload all information to send slack
    * @return {Object} response about the payload
    */
-  response = HTTP.post(webhookLink, {
-    payload: payload
+
+  HTTP.post(webhookLink, {
+    headers: {
+      'Content-Type': 'text/plain;charset=UTF-8'
+    },
+    content: payload,
   }, (error, response) => {
     if (error) {
-      throw new Meteor.Error(`[SlackLog] Request Error# ${error}`);
+      console.log(`[SlackLog] Request Error# ${error}`);
+      return;
     }
 
     /**
-     * Throw Error for improper POST on slack webhook
+     * console.log Error for improper POST on slack webhook
+     * throwing an error here will generate an infinite loop =)
      */
-    if (response.statusCode !== 200 ||
-       (response.statusCode === 200 && !response.data.ok)) {
-      throw new Meteor.Error(`[SlackLog] Improper response#
-        ${JSON.stringify(response)}, request: ${payload}`);
+
+    if (
+        response.statusCode !== 200 ||
+        (response.statusCode === 200 && response.content !== 'ok')
+    ) {
+      console.log(`${JSON.stringify(response)}, request: ${payload}`);
+      return;
     }
   });
 };
 
 slackLog = {
-  message(text) {
-    sendSlack(text, 'message');
+  message(text, scope) {
+    sendSlack(text, 'message', scope);
   },
-  error(text) {
-    sendSlack(text, 'error');
+  error(text, scope) {
+    sendSlack(text, 'error', scope);
   },
-  success(text) {
-    sendSlack(text, 'success');
+  success(text, scope) {
+    sendSlack(text, 'success', scope);
   }
 };
 
