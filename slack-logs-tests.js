@@ -37,7 +37,7 @@ Tinytest.add(`slackLog - HTTP.post - should received url string as first arg`,
       postArgs = args;
     };
 
-    slackLog.message('testing HTTP.post');
+    slackLog.message('testing HTTP.post - should received url string as first arg');
     test.isTrue(urlPattern.test(postArgs[0]));
 });
 
@@ -48,7 +48,7 @@ Tinytest.add(`slackLog - HTTP.post - should received object with headers & conte
       postArgs = args;
     };
 
-    slackLog.message('testing HTTP.post');
+    slackLog.message('testing HTTP.post - should received object with headers & content');
 
     test.isTrue(_.isObject(postArgs[1]));
     test.equal(Object.keys(postArgs[1])[0], 'headers');
@@ -62,9 +62,24 @@ Tinytest.add(`slackLog - HTTP.post - Payload - should have attachments array`,
       postArgs = args;
     };
 
-    slackLog.message('testing HTTP.post');
+    slackLog.message('testing HTTP.post - Payload - should have attachments array');
 
     let content = EJSON.parse(postArgs[1].content);
 
     test.isTrue(_.isArray(content.attachments));
+});
+
+Tinytest.add(`slackLog - HTTP.post - Payload - should not send same message in a row in less then 10 seconds`,
+  (test) => {
+    let postArgsArray = [];
+
+    HTTP.post = function(...args) {
+      postArgsArray.push(args);
+    };
+
+    _.times(4, () => {
+      slackLog.message('testing messages in a row');
+    });
+
+    test.isTrue(postArgsArray.length === 1);
 });

@@ -1,5 +1,11 @@
 let sendSlack = function(message, type, scope) {
   /**
+   * Don't send messages in a loop
+   */
+  if (slackLog.checkLoop(message)) {return false;}
+
+
+  /**
    * Slack configuration on Meteor.settings
    */
   let slackConfig = Meteor.settings.public.slack;
@@ -155,5 +161,17 @@ slackLog = {
   },
   success(text, scope) {
     sendSlack(text, 'success', scope);
+  }
+};
+
+/**
+ * Check if there is a loop, don't send the message more then once
+ * @param {String} message
+ */
+slackLog.checkLoop = function(message) {
+  if (slackLog.checkMessage === message) {
+    return true;
+  } else {
+    slackLog.checkMessage = message;
   }
 };
