@@ -94,7 +94,7 @@ let sendSlack = function(message, type, scope) {
    * If non scope sent find out
    * @type {String}
    */
-  if (!scope) {Meteor.isClient ? 'client' : 'server';}
+  if (!scope) {scope = Meteor.isClient ? 'client' : 'server';}
 
   /**
    * Create attachments for slack message
