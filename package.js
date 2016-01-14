@@ -11,7 +11,7 @@ Package.onUse(function(api) {
   api.use([
     'ecmascript',
     'check',
-    'json',
+    'ejson',
     'http',
   ]);
 
@@ -27,7 +27,7 @@ Package.onTest(function(api) {
     'tinytest',
     'ecmascript',
     'check',
-    'json',
+    'ejson',
     'http',
     'underscore',
   ]);

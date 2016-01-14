@@ -64,7 +64,7 @@ Tinytest.add(`slackLog - HTTP.post - Payload - should have attachments array`,
 
     slackLog.message('testing HTTP.post');
 
-    let content = JSON.parse(postArgs[1].content);
+    let content = EJSON.parse(postArgs[1].content);
 
     test.isTrue(_.isArray(content.attachments));
 });
