@@ -42,7 +42,8 @@ See below how to enable.
       "channel": "#channel", // if you want to change the channel
       "appName": "myApp",
       "appUrl": "https://myapp.com",
-      "trackGlobalErrors": "true" // enable global exception logs
+      "trackGlobalErrors": "true", // enable global exception logs
+      "blackList": ["black", "list", "heartbeat"]
     }
   }
 }
@@ -51,6 +52,13 @@ See below how to enable.
 Remember `settings.json` does not allow comments. Please take them off in your app.
 
 Done with the configuration!
+
+## Black list inconvenient messages
+
+In the `blackList` array add strings you wouldn't like to be logged.
+
+For example "heartbeat" it's a thrown error that global tracker will get. To prevent that
+just add it on `blackList`.
 
 ## Custom logs
 
