@@ -12,6 +12,7 @@ Meteor.settings = {
       channel: '#channel',
       appName: 'myApp',
       appUrl: 'https://myapp.com/img.jpg',
+      blackList: ['black', 'list']
     }
   }
 };
@@ -82,4 +83,18 @@ Tinytest.add(`slackLog - HTTP.post - Payload - should not send same message in a
     });
 
     test.isTrue(postArgsArray.length === 1);
+});
+
+
+Tinytest.add(`slackLog - HTTP.post - Payload - should not send message that has a match in the black list`,
+  (test) => {
+    let postArgsArray = [];
+
+    HTTP.post = function(...args) {
+      postArgsArray.push(args);
+    };
+
+    slackLog.message('This message should not pass because its in blacklist');
+
+    test.isFalse(postArgsArray.length);
 });
