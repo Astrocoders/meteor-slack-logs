@@ -42,7 +42,7 @@ See below how to enable.
       "channel": "#channel", // if you want to change the channel
       "appName": "myApp",
       "appUrl": "https://myapp.com",
-      "trackGlobalErrors": "true", // enable global exception logs
+      "trackGlobalErrors": true, // enable global exception logs
       "blackList": ["black", "list", "heartbeat"]
     }
   }
